@@ -16,11 +16,17 @@ write, so the server never echoes a sent message back and it has no server-state
 ```
 src/
 ├── data/         api/ (transport) · domain/ (API -> app mappers) · query/ (cache policy)
-├── features/     chats/ · chat/ · profile/ · settings/  — screen + its hooks + its components
+├── features/     chats/ · chat/ · profile/ · settings/  — one folder per screen
 ├── shared/       components/ · theme/ · utils/  — used by 2+ features, knows about none
 ├── store/        Zustand client state
-└── navigation/   navigators + typed route params
+├── navigation/   navigators + typed route params
+└── assets/       icons/  — SVGs as the icon set exports them, compiled by Metro
 ```
+
+A feature folder splits the screen three ways — `ChatScreen.tsx` (markup), `styles.ts`
+(the themed `createStyles` factory) and `useChat.ts` (its logic) — with `hooks/` for the
+data hooks it composes and `components/` for pieces only it uses. A component file is
+capped at 250 lines. See the `mp-ui-conventions` skill.
 
 `data/` and `store/` sit at the same level so the state boundary is visible in the tree.
 
