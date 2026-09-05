@@ -10,4 +10,10 @@ export const createStyles = (theme: Theme) =>
     content: {
       paddingVertical: theme.spacing.sm,
     },
+    emptyContent: {
+      flexGrow: 1,
+    },
+    footer: {
+      paddingVertical: theme.spacing.lg,
+    },
   });

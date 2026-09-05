@@ -1,20 +1,27 @@
 import { useCallback } from 'react';
-import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { ChatListRow } from '@/features/chats/components/ChatListRow';
-import { CHAT_ROW_HEIGHT } from '@/features/chats/components/ChatListRow.styles';
-import { mockChats, type ChatSummary } from '@/features/chats/mockChats';
-import { createStyles } from '@/features/chats/styles';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  View,
+  type ListRenderItemInfo,
+} from 'react-native';
+import type { Contact } from '@/data/domain/contact';
+import { ChatListRow } from './components/ChatListRow';
+import { CHAT_ROW_HEIGHT } from './components/ChatListRow.styles';
+import { ChatListSkeleton } from './components/ChatListSkeleton';
+import { StateMessage } from './components/StateMessage';
+import { createStyles } from './styles';
+import { useChats } from './useChats';
+import { useTheme } from '@/shared/theme/useTheme';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 const INITIAL_ROWS = 12;
+const END_REACHED_THRESHOLD = 0.5;
 
-const keyExtractor = (chat: ChatSummary) => String(chat.id);
+const keyExtractor = (contact: Contact) => String(contact.id);
 
-const getItemLayout = (
-  _: ArrayLike<ChatSummary> | null | undefined,
-  index: number,
-) => ({
+const getItemLayout = (_: ArrayLike<Contact> | null | undefined, index: number) => ({
   length: CHAT_ROW_HEIGHT,
   offset: CHAT_ROW_HEIGHT * index,
   index,
@@ -22,39 +29,85 @@ const getItemLayout = (
 
 export function ChatsScreen() {
   const styles = useThemedStyles(createStyles);
-  const navigation = useNavigation();
-
-  const handlePressChat = useCallback(
-    (contactId: number, contactName: string) => {
-      navigation.navigate('Chat', { contactId, contactName });
-    },
-    [navigation],
-  );
+  const theme = useTheme();
+  const {
+    contacts,
+    isPending,
+    isError,
+    isRefreshing,
+    isFetchingNextPage,
+    openChat,
+    loadMore,
+    refresh,
+  } = useChats();
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<ChatSummary>) => (
+    ({ item }: ListRenderItemInfo<Contact>) => (
       <ChatListRow
         id={item.id}
         name={item.name}
         avatarUrl={item.avatarUrl}
-        lastMessage={item.lastMessage}
-        lastMessageAt={item.lastMessageAt}
-        onPress={handlePressChat}
+        onPress={openChat}
       />
     ),
-    [handlePressChat],
+    [openChat],
   );
+
+  const renderFooter = useCallback(
+    () =>
+      isFetchingNextPage ? (
+        <View style={styles.footer}>
+          <ActivityIndicator color={theme.colors.textMuted} />
+        </View>
+      ) : null,
+    [isFetchingNextPage, styles, theme],
+  );
+
+  if (isPending) {
+    return (
+      <View style={styles.list}>
+        <ChatListSkeleton />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.list}>
+        <StateMessage
+          title="Could not load chats"
+          message="Check your connection and try again."
+          actionLabel="Try again"
+          onAction={refresh}
+        />
+      </View>
+    );
+  }
 
   return (
     <FlatList
-      data={mockChats}
+      data={contacts}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       getItemLayout={getItemLayout}
       initialNumToRender={INITIAL_ROWS}
       showsVerticalScrollIndicator={false}
+      onEndReached={loadMore}
+      onEndReachedThreshold={END_REACHED_THRESHOLD}
+      ListFooterComponent={renderFooter}
+      ListEmptyComponent={
+        <StateMessage title="No chats yet" message="Conversations will appear here." />
+      }
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={refresh}
+          tintColor={theme.colors.textMuted}
+          colors={[theme.colors.accent]}
+        />
+      }
       style={styles.list}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={contacts.length === 0 ? styles.emptyContent : styles.content}
     />
   );
 }
