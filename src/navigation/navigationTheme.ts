@@ -20,7 +20,7 @@ export function toNavigationTheme(theme: Theme): NavigationTheme {
       ...base.colors,
       primary: theme.colors.accent,
       background: theme.colors.background,
-      card: theme.colors.surface,
+      card: theme.colors.background,
       text: theme.colors.text,
       border: theme.colors.border,
       notification: theme.colors.danger,

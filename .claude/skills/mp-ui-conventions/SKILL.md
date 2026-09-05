@@ -1,9 +1,90 @@
 ---
 name: mp-ui-conventions
-description: Conventions for MessagePartner UI — design tokens, component structure, list performance, required loading/empty/error states, and when something is promoted into shared/. Use when creating or changing any component or screen.
+description: Conventions for MessagePartner UI — the Messenger visual language it copies, design tokens, component structure, list performance, required loading/empty/error states, and when something is promoted into shared/. Use when creating or changing any component or screen.
 ---
 
 # MessagePartner UI conventions
+
+## Visual language
+
+The app copies **Meta's Messenger**. The tokens in `tokens.ts` are Messenger's palette, and
+the layouts below are Messenger's layouts. When a detail is unspecified here, the answer is
+whatever Messenger does — not whatever iMessage or WhatsApp does. Those three look similar
+enough that mixing them produces something that reads as "a chat app" rather than as a
+deliberate design, which is the drift this section exists to stop.
+
+**Copy only the parts the brief needs.** Messenger's surface is much larger than this app.
+Deliberately absent, and to stay absent:
+
+| Not building | Why |
+|---|---|
+| Search field above the list | Not in the brief, and there is no search endpoint — filtering only the pages already loaded behaves erratically next to infinite scroll |
+| Active-now dots, stories row | No presence or story data exists; both would be decorating invented state |
+| Unread badges and bold unread rows | The API has no read state, and faking one makes the list lie |
+| Reactions, typing indicators, read receipts | No data, and each is a feature in its own right |
+| Camera / compose FABs, attachment buttons | Nothing behind them to open |
+
+Adding any of these means inventing data. A row that renders a green dot the API never
+sent is worse than a row without one.
+
+### Chats list row
+
+Fixed **72pt** tall — 56pt avatar plus `spacing.sm` above and below — which is what makes
+`getItemLayout` possible. `spacing.lg` horizontal padding, `spacing.md` between avatar and
+text.
+
+```
+┌──────────────────────────────────────────┐
+│  ●●●●   Marcus Bell                      │   subtitle / medium / text
+│  ●●●●   Sounds good, see you then · 3m   │   body / regular / textMuted
+└──────────────────────────────────────────┘
+```
+
+The timestamp sits **at the end of the preview line**, after a `·` separator, in the same
+muted style as the preview. It is not a right-aligned column in the top corner — that is
+WhatsApp's row, and it is the single easiest way to end up with the wrong app's list.
+
+Both text lines are `numberOfLines={1}`. The preview flexes and truncates; the timestamp
+never does.
+
+**No dividers between rows.** Messenger separates rows with whitespace alone. Rows are
+full-bleed — no cards, no insets, no shadows. The only hairline on the screen is the one
+under the header.
+
+### Avatars
+
+Always circular (`radius.pill`), always from the `avatarSize` scale, never with a ring or
+border. A missing or failed image falls back to a `surface` circle holding the contact's
+initials in `textMuted` — never a broken-image box and never an empty hole.
+
+### Message bubbles
+
+| | Fill | Text | Side |
+|---|---|---|---|
+| Incoming | `surface` | `text` | left |
+| Outgoing | `accent` | `textInverse` | right |
+
+`radius.lg` corners, no tails. Max width 75% of the screen so a long message wraps rather
+than spanning edge to edge. Padding is `spacing.md` horizontal, `spacing.sm` vertical.
+
+Consecutive messages from the same sender are grouped: `spacing.xs` between bubbles inside
+a group, `spacing.md` between groups. The avatar shows once per group, beside the last
+bubble in it.
+
+Outgoing bubbles come only from the outbox, so a pending or failed send is a state the
+bubble itself has to show — an unsent bubble is not styled identically to a sent one.
+
+### Composer
+
+A `radius.pill` input filled with `surface`, sitting on `background` with a hairline above
+it. The send control is `accent`, and is disabled — not hidden — while the input is empty.
+
+### Chrome
+
+Header and tab bar take `background`, divided from content by a `border` hairline. The tab
+bar shows icon plus label, `accent` when focused and `textMuted` when not. The chat header
+carries the contact's `avatarSize.sm` avatar next to their name, and tapping it opens the
+profile.
 
 ## Tokens only
 
@@ -108,7 +189,8 @@ Every tappable element has a minimum 44x44 touch target, an `accessibilityRole`,
 `accessibilityLabel` where the visible text is not self-explanatory. Avatars and icons
 carry labels; decorative images are hidden from the accessibility tree.
 
-Give tappable rows a pressed state. Silence on touch reads as a broken app.
+Give tappable rows a pressed state — `surfaceMuted` fill, the way Messenger fills a row
+under a finger. Silence on touch reads as a broken app.
 
 ## Text
 

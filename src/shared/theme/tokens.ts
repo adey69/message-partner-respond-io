@@ -39,8 +39,23 @@ export const fontWeight = {
 } as const satisfies Record<string, TextStyle['fontWeight']>;
 
 /**
+ * Avatars appear at three fixed sizes — beside a name in a list, inline in the
+ * chat header, and as the subject of the profile screen.
+ */
+export const avatarSize = {
+  sm: 32,
+  md: 56,
+  lg: 96,
+} as const;
+
+/**
  * Semantic colour roles rather than named hues, so a screen asks for
  * `textMuted` and gets the right answer in either scheme.
+ *
+ * `surface` is the raised-but-quiet fill: search fields, incoming bubbles,
+ * avatar placeholders. `surfaceMuted` is the pressed or selected state of one.
+ * `textInverse` is text sitting on `accent`, which is white in both schemes
+ * because the accent stays a saturated blue in both.
  */
 export type ThemeColors = {
   background: string;
@@ -57,28 +72,28 @@ export type ThemeColors = {
 
 const lightColors: ThemeColors = {
   background: '#FFFFFF',
-  surface: '#F5F6F8',
-  surfaceMuted: '#E8EAEE',
-  border: '#E1E4E8',
-  text: '#12141A',
-  textMuted: '#6B7280',
+  surface: '#F0F2F5',
+  surfaceMuted: '#E4E6EB',
+  border: '#CED0D4',
+  text: '#050505',
+  textMuted: '#65676B',
   textInverse: '#FFFFFF',
-  accent: '#2F6FED',
-  accentSubtle: '#E7EEFD',
-  danger: '#D92D20',
+  accent: '#0084FF',
+  accentSubtle: '#E7F3FF',
+  danger: '#FA383E',
 };
 
 const darkColors: ThemeColors = {
-  background: '#0E1116',
-  surface: '#171B22',
-  surfaceMuted: '#232833',
-  border: '#262B34',
-  text: '#F2F4F7',
-  textMuted: '#98A2B3',
-  textInverse: '#0E1116',
-  accent: '#5B8DEF',
-  accentSubtle: '#1B2536',
-  danger: '#F97066',
+  background: '#18191A',
+  surface: '#242526',
+  surfaceMuted: '#3A3B3C',
+  border: '#3E4042',
+  text: '#E4E6EB',
+  textMuted: '#B0B3B8',
+  textInverse: '#FFFFFF',
+  accent: '#2D88FF',
+  accentSubtle: '#263951',
+  danger: '#FF5C64',
 };
 
 export type ColorScheme = 'light' | 'dark';
@@ -90,6 +105,7 @@ export type Theme = {
   radius: typeof radius;
   fontSize: typeof fontSize;
   fontWeight: typeof fontWeight;
+  avatarSize: typeof avatarSize;
 };
 
 /**
@@ -97,6 +113,22 @@ export type Theme = {
  * lets themed styles be cached instead of rebuilt on every render.
  */
 export const themes: Record<ColorScheme, Theme> = {
-  light: { scheme: 'light', colors: lightColors, spacing, radius, fontSize, fontWeight },
-  dark: { scheme: 'dark', colors: darkColors, spacing, radius, fontSize, fontWeight },
+  light: {
+    scheme: 'light',
+    colors: lightColors,
+    spacing,
+    radius,
+    fontSize,
+    fontWeight,
+    avatarSize,
+  },
+  dark: {
+    scheme: 'dark',
+    colors: darkColors,
+    spacing,
+    radius,
+    fontSize,
+    fontWeight,
+    avatarSize,
+  },
 };
