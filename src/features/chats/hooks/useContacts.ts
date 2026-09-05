@@ -9,6 +9,8 @@ const PAGE_SIZE = 20;
 
 type UsersPage = ApiListResponse<ApiUser>;
 
+export type ContactsData = InfiniteData<UsersPage, number>;
+
 const getNextPageParam = (lastPage: UsersPage, allPages: UsersPage[]) => {
   const loaded = allPages.reduce(
     (count, page) => count + page.results.length,
@@ -17,7 +19,7 @@ const getNextPageParam = (lastPage: UsersPage, allPages: UsersPage[]) => {
   return loaded < lastPage.total ? loaded : undefined;
 };
 
-const selectContacts = (data: InfiniteData<UsersPage>): Contact[] =>
+const selectContacts = (data: ContactsData): Contact[] =>
   data.pages.flatMap(page => page.results.map(toContact));
 
 export function useContacts() {

@@ -1,13 +1,19 @@
 import { useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Contact } from '@/data/domain/contact';
-import { useContacts } from './hooks/useContacts';
-import { placeholderMessage, type PlaceholderMessage } from './utils/placeholderMessage';
+import { keys } from '@/data/query/keys';
+import { useContacts, type ContactsData } from './hooks/useContacts';
+import {
+  placeholderMessage,
+  type PlaceholderMessage,
+} from './utils/placeholderMessage';
 
 export type ChatListItem = Contact & PlaceholderMessage;
 
 export function useChats() {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const {
     data,
     isPending,
@@ -20,7 +26,11 @@ export function useChats() {
   } = useContacts();
 
   const chats: ChatListItem[] = useMemo(
-    () => (data ?? []).map(contact => ({ ...contact, ...placeholderMessage(contact.id) })),
+    () =>
+      (data ?? []).map(contact => ({
+        ...contact,
+        ...placeholderMessage(contact.id),
+      })),
     [data],
   );
 
@@ -38,8 +48,16 @@ export function useChats() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const refresh = useCallback(() => {
+    queryClient.setQueryData<ContactsData>(keys.contacts(), current =>
+      current === undefined
+        ? current
+        : {
+            pages: current.pages.slice(0, 1),
+            pageParams: current.pageParams.slice(0, 1),
+          },
+    );
     refetch();
-  }, [refetch]);
+  }, [queryClient, refetch]);
 
   return {
     chats,

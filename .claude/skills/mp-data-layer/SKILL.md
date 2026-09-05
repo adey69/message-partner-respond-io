@@ -64,6 +64,24 @@ list shifting as they land.
 Freshness comes from explicit pull-to-refresh on the chats list instead: user-initiated and
 predictable, with no network traffic hidden behind navigation.
 
+Pull-to-refresh trims the cached pages to the first and then refetches, rather than calling
+`refetch()` on the full set:
+
+```ts
+queryClient.setQueryData<ContactsData>(keys.contacts(), current =>
+  current === undefined
+    ? current
+    : { pages: current.pages.slice(0, 1), pageParams: current.pageParams.slice(0, 1) },
+);
+refetch();
+```
+
+Offset paging cannot safely re-page a list that has changed at its head — records inserted
+at the top shift every later offset, so the replayed pages overlap and duplicate ids reach
+`keyExtractor`. One fresh page is also what pulling down means, and the gesture only fires
+at the top of the list, so nothing is lost by collapsing to it. Use `resetQueries` only
+where a skeleton flash is acceptable; it clears the entry rather than trimming it.
+
 ## Infinite queries
 
 Pagination is offset-based. Derive the next offset from what has already loaded and stop
