@@ -47,10 +47,11 @@ export function TabNavigator() {
           borderTopColor: theme.colors.border,
         },
         headerStyle: { backgroundColor: theme.colors.background },
+        headerTitleAlign: 'center',
         headerTitleStyle: {
           color: theme.colors.text,
-          fontSize: theme.fontSize.title,
-          fontWeight: theme.fontWeight.semibold,
+          fontSize: theme.fontSize.heading,
+          fontWeight: theme.fontWeight.bold,
         },
       }}>
       <Tab.Screen

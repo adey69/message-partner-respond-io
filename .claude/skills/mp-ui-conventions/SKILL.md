@@ -105,8 +105,13 @@ features/chat/
 ├── styles.ts           how it looks
 ├── useChat.ts          what it does
 ├── hooks/              data hooks the screen composes (useThread, useSendMessage)
+├── utils/              pure helpers used only by this screen
 └── components/         pieces used only by this screen
 ```
+
+Nothing else sits at the root of a feature folder. A helper that is not a screen, a
+style sheet or a hook goes in `utils/`, where it is one move away from `shared/utils/`
+if a second feature ever needs it.
 
 `styles.ts` exports `createStyles = (theme: Theme) => StyleSheet.create({...})` — a pure
 function of the theme, defined at module scope. `useThemedStyles` keys its cache on that
@@ -165,6 +170,8 @@ The chats list and the thread are the two places performance is actually visible
 - Callbacks passed into rows are `useCallback`-stable. Prefer passing an id and letting the
   row invoke `onPress(id)` over building a per-row closure.
 - `keyExtractor` returns a stable domain id, never the array index.
+- Scroll indicators are hidden. Both lists are full-bleed against the screen edge,
+  and the bar cuts across the row content it overlays.
 - Fixed-height rows get `getItemLayout`, which removes measurement work and makes scroll
   position instant.
 - Set `initialNumToRender` to roughly one screenful. The default renders more than is

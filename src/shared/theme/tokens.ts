@@ -48,6 +48,8 @@ export const avatarSize = {
   lg: 96,
 } as const;
 
+export type AvatarSize = keyof typeof avatarSize;
+
 /**
  * Semantic colour roles rather than named hues, so a screen asks for
  * `textMuted` and gets the right answer in either scheme.
