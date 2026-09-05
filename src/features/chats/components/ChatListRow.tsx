@@ -16,8 +16,8 @@ type ChatListRowProps = {
   id: number;
   name: string;
   avatarUrl: string;
-  lastMessage?: string;
-  lastMessageAt?: string;
+  lastMessage: string;
+  lastMessageAt: string;
   onPress: (id: number, name: string) => void;
 };
 

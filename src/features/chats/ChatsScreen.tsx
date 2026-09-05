@@ -6,22 +6,21 @@ import {
   View,
   type ListRenderItemInfo,
 } from 'react-native';
-import type { Contact } from '@/data/domain/contact';
 import { ChatListRow } from './components/ChatListRow';
 import { CHAT_ROW_HEIGHT } from './components/ChatListRow.styles';
 import { ChatListSkeleton } from './components/ChatListSkeleton';
 import { StateMessage } from './components/StateMessage';
 import { createStyles } from './styles';
-import { useChats } from './useChats';
+import { useChats, type ChatListItem } from './useChats';
 import { useTheme } from '@/shared/theme/useTheme';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 const INITIAL_ROWS = 12;
 const END_REACHED_THRESHOLD = 0.5;
 
-const keyExtractor = (contact: Contact) => String(contact.id);
+const keyExtractor = (chat: ChatListItem) => String(chat.id);
 
-const getItemLayout = (_: ArrayLike<Contact> | null | undefined, index: number) => ({
+const getItemLayout = (_: ArrayLike<ChatListItem> | null | undefined, index: number) => ({
   length: CHAT_ROW_HEIGHT,
   offset: CHAT_ROW_HEIGHT * index,
   index,
@@ -31,7 +30,7 @@ export function ChatsScreen() {
   const styles = useThemedStyles(createStyles);
   const theme = useTheme();
   const {
-    contacts,
+    chats,
     isPending,
     isError,
     isRefreshing,
@@ -42,11 +41,13 @@ export function ChatsScreen() {
   } = useChats();
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Contact>) => (
+    ({ item }: ListRenderItemInfo<ChatListItem>) => (
       <ChatListRow
         id={item.id}
         name={item.name}
         avatarUrl={item.avatarUrl}
+        lastMessage={item.lastMessage}
+        lastMessageAt={item.lastMessageAt}
         onPress={openChat}
       />
     ),
@@ -86,7 +87,7 @@ export function ChatsScreen() {
 
   return (
     <FlatList
-      data={contacts}
+      data={chats}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       getItemLayout={getItemLayout}
@@ -107,7 +108,7 @@ export function ChatsScreen() {
         />
       }
       style={styles.list}
-      contentContainerStyle={contacts.length === 0 ? styles.emptyContent : styles.content}
+      contentContainerStyle={chats.length === 0 ? styles.emptyContent : styles.content}
     />
   );
 }
