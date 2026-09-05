@@ -6,9 +6,9 @@ import {
 import type { RouteProp } from '@react-navigation/native';
 import { ChatScreen } from '@/features/chat/ChatScreen';
 import { ProfileScreen } from '@/features/profile/ProfileScreen';
-import { TabNavigator } from '@/navigation/TabNavigator';
-import { toNavigationTheme } from '@/navigation/navigationTheme';
-import type { RootStackParamList } from '@/navigation/types';
+import { TabNavigator } from './TabNavigator';
+import { toNavigationTheme } from './navigationTheme';
+import type { RootStackParamList } from './types';
 import { useTheme } from '@/shared/theme/useTheme';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

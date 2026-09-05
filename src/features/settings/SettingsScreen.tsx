@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { createStyles } from '@/features/settings/styles';
+import { createStyles } from './styles';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 export function SettingsScreen() {

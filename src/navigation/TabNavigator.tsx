@@ -5,7 +5,7 @@ import GearRegular from '@/assets/icons/gear-regular.svg';
 import GearSolid from '@/assets/icons/gear-solid.svg';
 import { ChatsScreen } from '@/features/chats/ChatsScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
-import type { TabParamList } from '@/navigation/types';
+import type { TabParamList } from './types';
 import { useTheme } from '@/shared/theme/useTheme';
 
 type TabIconProps = {

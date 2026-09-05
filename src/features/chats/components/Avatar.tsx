@@ -1,6 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import { Image, Text, View } from 'react-native';
-import { createAvatarStyles } from '@/features/chats/components/Avatar.styles';
+import { createAvatarStyles } from './Avatar.styles';
 import type { AvatarSize } from '@/shared/theme/tokens';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 

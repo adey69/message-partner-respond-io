@@ -51,7 +51,13 @@ never as an entry of their own.
 every module in a directory into the graph and evaluate them at startup. Import files
 directly; the `@/*` alias already keeps paths short.
 
-**Imports use the `@/*` alias**, never `../../../`.
+**Inside a feature, imports are relative. Crossing out of one, they use `@/*`.** A screen
+reaches its own pieces as `./styles`, `./components/ChatListRow`, `../utils/formatDate`,
+and reaches `data/`, `shared/` and `navigation/` as `@/…`.
+
+The feature folder is then self-contained — it can be renamed or moved without touching a
+line inside it — and `@/` carries information: every one marks a dependency that leaves
+the feature, so a screen's coupling to the rest of the app is visible in its import list.
 
 **TypeScript is strict.** No `any`. API response types live in `src/data/api/types.ts` and
 are converted by `src/data/domain/*` before reaching a component.

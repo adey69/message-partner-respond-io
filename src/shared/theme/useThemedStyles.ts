@@ -1,5 +1,5 @@
-import { useTheme } from '@/shared/theme/useTheme';
-import type { Theme } from '@/shared/theme/tokens';
+import { useTheme } from './useTheme';
+import type { Theme } from './tokens';
 
 type StyleFactory<T> = (theme: Theme) => T;
 
