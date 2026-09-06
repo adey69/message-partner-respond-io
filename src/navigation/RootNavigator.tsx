@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -8,7 +9,7 @@ import { ChatScreen } from '@/features/chat/ChatScreen';
 import { ChatHeaderTitle } from '@/features/chat/components/ChatHeaderTitle';
 import { ProfileScreen } from '@/features/profile/ProfileScreen';
 import { TabNavigator } from './TabNavigator';
-import { toNavigationTheme } from './navigationTheme';
+import { toNavigationTheme, toStackScreenOptions } from './navigationTheme';
 import type { RootStackParamList } from './types';
 import { useTheme } from '@/shared/theme/useTheme';
 
@@ -35,10 +36,12 @@ const chatOptions = ({
 
 export function RootNavigator() {
   const theme = useTheme();
+  const navigationTheme = useMemo(() => toNavigationTheme(theme), [theme]);
+  const screenOptions = useMemo(() => toStackScreenOptions(theme), [theme]);
 
   return (
-    <NavigationContainer theme={toNavigationTheme(theme)}>
-      <Stack.Navigator>
+    <NavigationContainer theme={navigationTheme}>
+      <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen name="Tabs" component={TabNavigator} options={tabsOptions} />
         <Stack.Screen name="Chat" component={ChatScreen} options={chatOptions} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />

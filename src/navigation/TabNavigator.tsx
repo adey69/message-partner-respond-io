@@ -47,7 +47,7 @@ export function TabNavigator() {
           borderTopColor: theme.colors.border,
         },
         headerStyle: { backgroundColor: theme.colors.background },
-        headerTitleAlign: 'center',
+        headerTitleAlign: 'left',
         headerTitleStyle: {
           color: theme.colors.text,
           fontSize: theme.fontSize.heading,
@@ -57,7 +57,7 @@ export function TabNavigator() {
       <Tab.Screen
         name="Chats"
         component={ChatsScreen}
-        options={{ tabBarIcon: renderChatsIcon }}
+        options={{ tabBarIcon: renderChatsIcon, headerTitleAlign: 'center' }}
       />
       <Tab.Screen
         name="Settings"
