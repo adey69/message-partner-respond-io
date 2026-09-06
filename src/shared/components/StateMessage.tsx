@@ -24,8 +24,10 @@ export function StateMessage({
   const styles = useThemedStyles(createStateMessageStyles);
 
   const actionStyle = useCallback(
-    ({ pressed }: PressableStateCallbackType) =>
-      pressed ? styles.actionPressed : styles.action,
+    ({ pressed }: PressableStateCallbackType) => [
+      styles.action,
+      pressed && styles.actionPressed,
+    ],
     [styles],
   );
 

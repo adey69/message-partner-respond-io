@@ -31,12 +31,7 @@ export const createStateMessageStyles = (theme: Theme) =>
       backgroundColor: theme.colors.accent,
     },
     actionPressed: {
-      marginTop: theme.spacing.lg,
-      minHeight: 44,
-      justifyContent: 'center',
-      paddingHorizontal: theme.spacing.xl,
-      borderRadius: theme.radius.pill,
-      backgroundColor: theme.colors.accentSubtle,
+      backgroundColor: theme.colors.accentPressed,
     },
     actionLabel: {
       color: theme.colors.textInverse,

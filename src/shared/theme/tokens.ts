@@ -68,6 +68,7 @@ export type ThemeColors = {
   textMuted: string;
   textInverse: string;
   accent: string;
+  accentPressed: string;
   accentSubtle: string;
   danger: string;
 };
@@ -81,6 +82,7 @@ const lightColors: ThemeColors = {
   textMuted: '#65676B',
   textInverse: '#FFFFFF',
   accent: '#0084FF',
+  accentPressed: '#0068CC',
   accentSubtle: '#E7F3FF',
   danger: '#FA383E',
 };
@@ -94,6 +96,7 @@ const darkColors: ThemeColors = {
   textMuted: '#B0B3B8',
   textInverse: '#FFFFFF',
   accent: '#2D88FF',
+  accentPressed: '#1B74E4',
   accentSubtle: '#263951',
   danger: '#FF5C64',
 };

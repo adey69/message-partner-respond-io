@@ -30,8 +30,10 @@ export const SettingsRow = memo(
     }, [url, onOpen]);
 
     const rowStyle = useCallback(
-      ({ pressed }: PressableStateCallbackType) =>
-        pressed ? styles.rowPressed : styles.row,
+      ({ pressed }: PressableStateCallbackType) => [
+        styles.row,
+        pressed && styles.rowPressed,
+      ],
       [styles],
     );
 

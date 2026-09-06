@@ -4,15 +4,6 @@ import type { Theme } from '@/shared/theme/tokens';
 const MIN_TOUCH_TARGET = 44;
 
 export const createSettingsRowStyles = (theme: Theme) => {
-  const row = {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: MIN_TOUCH_TARGET,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-  } as const;
-
   const value: TextStyle = {
     flexShrink: 1,
     marginLeft: theme.spacing.md,
@@ -21,8 +12,17 @@ export const createSettingsRowStyles = (theme: Theme) => {
   };
 
   return StyleSheet.create({
-    row,
-    rowPressed: { ...row, backgroundColor: theme.colors.surfaceMuted },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      minHeight: MIN_TOUCH_TARGET,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    rowPressed: {
+      backgroundColor: theme.colors.surfaceMuted,
+    },
     label: {
       color: theme.colors.text,
       fontSize: theme.fontSize.body,

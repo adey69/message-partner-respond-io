@@ -9,9 +9,9 @@ import {
 import { ChatListRow } from './components/ChatListRow';
 import { CHAT_ROW_HEIGHT } from './components/ChatListRow.styles';
 import { ChatListSkeleton } from './components/ChatListSkeleton';
-import { StateMessage } from './components/StateMessage';
 import { createStyles } from './styles';
 import { useChats, type ChatListItem } from './useChats';
+import { StateMessage } from '@/shared/components/StateMessage';
 import { useTheme } from '@/shared/theme/useTheme';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 

@@ -35,8 +35,8 @@ export function useChats() {
   );
 
   const openChat = useCallback(
-    (contactId: number, contactName: string) => {
-      navigation.navigate('Chat', { contactId, contactName });
+    (contactId: number, contactName: string, contactAvatarUrl: string) => {
+      navigation.navigate('Chat', { contactId, contactName, contactAvatarUrl });
     },
     [navigation],
   );

@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { ChatScreen } from '@/features/chat/ChatScreen';
+import { ChatHeaderTitle } from '@/features/chat/components/ChatHeaderTitle';
 import { ProfileScreen } from '@/features/profile/ProfileScreen';
 import { TabNavigator } from './TabNavigator';
 import { toNavigationTheme } from './navigationTheme';
@@ -21,7 +22,16 @@ const chatOptions = ({
   route,
 }: {
   route: RouteProp<RootStackParamList, 'Chat'>;
-}): NativeStackNavigationOptions => ({ title: route.params.contactName });
+}): NativeStackNavigationOptions => ({
+  title: route.params.contactName,
+  headerTitle: () => (
+    <ChatHeaderTitle
+      contactId={route.params.contactId}
+      name={route.params.contactName}
+      avatarUrl={route.params.contactAvatarUrl}
+    />
+  ),
+});
 
 export function RootNavigator() {
   const theme = useTheme();

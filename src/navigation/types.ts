@@ -7,7 +7,7 @@ export type TabParamList = {
 
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
-  Chat: { contactId: number; contactName: string };
+  Chat: { contactId: number; contactName: string; contactAvatarUrl: string };
   Profile: { contactId: number };
 };
 
