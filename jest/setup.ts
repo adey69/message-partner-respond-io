@@ -2,6 +2,9 @@ import { clearAllMockStorages } from '@react-native-async-storage/async-storage/
 import { EMPTY_PAGE, fetchMock } from './apiMock';
 import { clearTestQueryClients } from './queryClient';
 import { queryClient } from '@/data/query/queryClient';
+import { useBlockStore } from '@/store/blockStore';
+import { useDraftStore } from '@/store/draftStore';
+import { useOutboxStore } from '@/store/outboxStore';
 
 // The library ships its own mock, with everything hanging off `default`.
 jest.mock(
@@ -24,6 +27,18 @@ jest.mock('react-native-bootsplash', () => ({
 }));
 
 globalThis.fetch = jest.fn();
+
+// Persisted stores read from disk asynchronously. Left to race, that read
+// lands in the middle of a test and re-renders a screen outside `act`, and the
+// work it schedules outlives the run. Settling it first means every test starts
+// from a store that has already hydrated.
+beforeEach(async () => {
+  await Promise.all([
+    useBlockStore.persist.rehydrate(),
+    useDraftStore.persist.rehydrate(),
+    useOutboxStore.persist.rehydrate(),
+  ]);
+});
 
 // Nothing reaches the network in a test. The default is an empty page so a
 // screen that fetches without being told what to expect renders its empty

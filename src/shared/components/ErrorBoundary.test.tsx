@@ -1,4 +1,9 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -63,8 +68,10 @@ describe('ErrorBoundary', () => {
         <Boom throws={false} />
       </ErrorBoundary>,
     );
-    fireEvent.press(screen.getByText('Try again'));
+    await fireEvent.press(screen.getByText('Try again'));
 
-    expect(screen.getByText('Working screen')).toBeTruthy();
+    await waitFor(() =>
+      expect(screen.getByText('Working screen')).toBeOnTheScreen(),
+    );
   });
 });

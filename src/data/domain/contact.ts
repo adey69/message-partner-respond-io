@@ -7,11 +7,18 @@ export type Contact = {
   phone: string;
 };
 
+const NO_NAME = 'Unknown contact';
+
+const asText = (value: string | undefined | null): string =>
+  typeof value === 'string' ? value : '';
+
 export function toContact(user: ApiUser): Contact {
+  const name = asText(user.name).trim();
+
   return {
     id: user.id,
-    name: user.name,
-    avatarUrl: user.avatar,
-    phone: user.phone,
+    name: name === '' ? NO_NAME : name,
+    avatarUrl: asText(user.avatar),
+    phone: asText(user.phone),
   };
 }

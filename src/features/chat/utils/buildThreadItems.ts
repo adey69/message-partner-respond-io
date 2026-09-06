@@ -10,6 +10,18 @@ export type ThreadItem = {
   isGroupEnd: boolean;
 };
 
+const separatorFor = (
+  message: Message,
+  needed: boolean,
+): string | undefined => {
+  if (!needed) {
+    return undefined;
+  }
+
+  const label = formatMessageSeparator(message.sentAt);
+  return label === '' ? undefined : label;
+};
+
 const isFarApart = (earlier: Message, later: Message) =>
   new Date(later.sentAt).getTime() - new Date(earlier.sentAt).getTime() >
   SEPARATOR_GAP;
@@ -36,9 +48,7 @@ export function buildThreadItems(messages: Message[]): ThreadItem[] {
   return messages
     .map((message, index) => ({
       message,
-      separatorLabel: needsSeparator[index]
-        ? formatMessageSeparator(message.sentAt)
-        : undefined,
+      separatorLabel: separatorFor(message, needsSeparator[index]),
       isGroupStart: startsGroup[index],
       isGroupEnd: index === messages.length - 1 || startsGroup[index + 1],
     }))

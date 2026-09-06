@@ -11,6 +11,10 @@ type AvatarProps = {
 };
 
 function initialsOf(name: string): string {
+  if (typeof name !== 'string') {
+    return '';
+  }
+
   return name
     .trim()
     .split(/\s+/)
@@ -25,9 +29,11 @@ export const Avatar = memo(({ name, uri, size }: AvatarProps) => {
   const [failed, setFailed] = useState(false);
   const handleError = useCallback(() => setFailed(true), []);
 
+  const hasImage = typeof uri === 'string' && uri !== '' && !failed;
+
   return (
     <View style={styles.circle[size]}>
-      {uri !== '' && !failed ? (
+      {hasImage ? (
         <Image
           source={{ uri }}
           style={styles.image}

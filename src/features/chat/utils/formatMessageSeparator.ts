@@ -17,9 +17,19 @@ const fullDate = new Intl.DateTimeFormat(undefined, {
 const startOfDay = (date: Date) =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 
-/** The date and time label marking a jump in time between two messages. */
-export function formatMessageSeparator(iso: string, now: number = Date.now()): string {
+/**
+ * The date and time label marking a jump in time between two messages. A
+ */
+export function formatMessageSeparator(
+  iso: string,
+  now: number = Date.now(),
+): string {
   const then = new Date(iso);
+
+  if (Number.isNaN(then.getTime())) {
+    return '';
+  }
+
   const time = clock.format(then);
   const daysApart = Math.round(
     (startOfDay(new Date(now)) - startOfDay(then)) / DAY,

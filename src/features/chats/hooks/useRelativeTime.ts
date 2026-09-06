@@ -26,6 +26,11 @@ export function startClock(): () => void {
       () => useClockStore.setState({ now: Date.now() }),
       TICK_MS,
     );
+
+    // A heartbeat should never be the reason a process stays alive. Node keeps
+    // one running for a pending interval; React Native's timers are plain ids
+    // with no such notion, so this is a no-op everywhere but a test runner.
+    (timer as unknown as { unref?: () => void }).unref?.();
   }
 
   let stopped = false;

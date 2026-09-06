@@ -13,10 +13,19 @@ const dayMonth = new Intl.DateTimeFormat(undefined, {
   month: 'numeric',
 });
 
-/** The short relative label shown beside a message preview in the chats list. */
-export function formatChatTimestamp(iso: string, now: number = Date.now()): string {
+/**
+ * The short relative label shown beside a message preview in the chats list.
+ */
+export function formatChatTimestamp(
+  iso: string,
+  now: number = Date.now(),
+): string {
   const then = new Date(iso);
   const elapsed = now - then.getTime();
+
+  if (Number.isNaN(elapsed)) {
+    return '';
+  }
 
   if (elapsed < MINUTE) {
     return 'now';

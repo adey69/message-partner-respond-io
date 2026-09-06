@@ -38,3 +38,16 @@ describe('formatChatTimestamp', () => {
     expect(formatChatTimestamp(ago(WEEK), NOW)).toMatch(/\d/);
   });
 });
+
+// `Intl` throws a RangeError on an invalid date rather than formatting it, so
+// an unreadable timestamp has to stop here or it takes down the row.
+describe('an unreadable timestamp', () => {
+  it.each([
+    ['a malformed string', 'not a date'],
+    ['an empty string', ''],
+  ])('has no label for %s', (_label, iso) => {
+    expect(() => formatChatTimestamp(iso)).not.toThrow();
+    expect(formatChatTimestamp(iso)).toBe('');
+  });
+});
+

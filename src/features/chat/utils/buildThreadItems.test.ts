@@ -80,3 +80,21 @@ describe('buildThreadItems', () => {
     expect(items.b.isGroupStart).toBe(true);
   });
 });
+
+// A thread renders every separator it is given, so an unreadable timestamp
+// must produce none rather than an empty one.
+describe('an unreadable timestamp', () => {
+  it('marks no separator and does not throw', () => {
+    const items = buildThreadItems([
+      {
+        id: 'a',
+        body: 'hello',
+        sentAt: 'not a date',
+        direction: 'incoming',
+      },
+    ]);
+
+    expect(items[0].separatorLabel).toBeUndefined();
+  });
+});
+

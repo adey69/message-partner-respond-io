@@ -84,9 +84,9 @@ export const ChatListRow = memo(
             >
               {preview}
             </Text>
-            {showTimestamp ? (
+            {timestamp === '' ? null : (
               <Text style={styles.timestamp}>{` · ${timestamp}`}</Text>
-            ) : null}
+            )}
           </View>
         </View>
       </Pressable>

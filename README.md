@@ -37,7 +37,22 @@ yarn lint
 npx tsc --noEmit
 ```
 
-A release APK is committed at `android/app/build/outputs/apk/release/app-release.apk`.
+### Release APK
+
+```sh
+cd android && ./gradlew assembleRelease
+```
+
+Gradle writes to `android/app/build/outputs/apk/release/app-release.apk`. That path sits
+under a gitignored `build/` directory, so the committed copy lives at `dist/`:
+
+```sh
+mkdir -p dist
+cp android/app/build/outputs/apk/release/app-release.apk dist/
+```
+
+Release builds are signed with the debug keystore the template ships with — enough to
+install and run, not something that would go to a store.
 
 ## Architecture
 
@@ -169,3 +184,6 @@ Things deliberately left undone, and why:
   is not bridged to NetInfo, so there is no automatic recovery on reconnect.
 - **Offset pagination is not stable against a changing dataset.** Safe here because the
   fixture is static; a real API would want cursors.
+- **Route params are typed but not validated at runtime.** Nothing reaches a screen
+  except through the chats list, which builds its params from mapped contacts, so the
+  types hold today. Adding deep links or notification taps would need a guard.
