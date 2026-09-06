@@ -9,6 +9,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/data/query/queryClient';
 import { startAppStateFocusTracking } from '@/data/query/rnFocus';
 import { RootNavigator } from '@/navigation/RootNavigator';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -16,12 +17,14 @@ function App() {
   useEffect(startAppStateFocusTracking, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <RootNavigator />
-      </SafeAreaProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <RootNavigator />
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
