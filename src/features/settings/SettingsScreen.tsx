@@ -1,8 +1,8 @@
 import { ScrollView } from 'react-native';
-import { SettingsHeader } from './components/SettingsHeader';
 import { SettingsSection } from './components/SettingsSection';
 import { createStyles } from './styles';
 import { useSettings } from './useSettings';
+import { IdentityHeader } from '@/shared/components/IdentityHeader';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 const DATA_NOTE =
@@ -19,9 +19,9 @@ export function SettingsScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <SettingsHeader
+      <IdentityHeader
         name={owner.name}
-        role={owner.role}
+        subtitle={owner.role}
         avatarUrl={owner.avatarUrl}
       />
       <SettingsSection

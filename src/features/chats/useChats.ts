@@ -2,8 +2,9 @@ import { useCallback, useMemo } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Contact } from '@/data/domain/contact';
+import type { ContactsData } from '@/data/query/contactsCache';
 import { keys } from '@/data/query/keys';
-import { useContacts, type ContactsData } from './hooks/useContacts';
+import { useContacts } from './hooks/useContacts';
 import { startClock } from './hooks/useRelativeTime';
 import { lastSentMessage } from './utils/lastSentMessage';
 import {

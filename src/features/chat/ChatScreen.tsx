@@ -10,6 +10,7 @@ import {
 import { useRoute, type RouteProp } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlockedNotice } from './components/BlockedNotice';
 import { Composer } from './components/Composer';
 import { MessageBubble } from './components/MessageBubble';
 import { ThreadSkeleton } from './components/ThreadSkeleton';
@@ -34,6 +35,7 @@ export function ChatScreen() {
   const headerHeight = useHeaderHeight();
   const {
     items,
+    isBlocked,
     isPending,
     isError,
     isLoadingMore,
@@ -126,7 +128,14 @@ export function ChatScreen() {
     >
       {renderThread()}
       <SafeAreaView edges={['bottom']} style={styles.composerArea}>
-        <Composer contactId={params.contactId} onSend={sendMessage} />
+        {isBlocked ? (
+          <BlockedNotice
+            contactId={params.contactId}
+            name={params.contactName}
+          />
+        ) : (
+          <Composer contactId={params.contactId} onSend={sendMessage} />
+        )}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );

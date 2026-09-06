@@ -9,6 +9,7 @@ export type ThreadParams = PageParams & {
 
 export const endpoints = {
   users: ({ limit, offset }: PageParams) => `/users?limit=${limit}&offset=${offset}`,
+  user: (id: number) => `/users/${id}`,
   posts: ({ userId, limit, offset }: ThreadParams) =>
     `/posts?userId=${userId}&limit=${limit}&offset=${offset}`,
   createPost: () => '/posts',

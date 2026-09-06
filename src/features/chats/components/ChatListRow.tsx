@@ -8,10 +8,12 @@ import {
 import { createChatListRowStyles } from './ChatListRow.styles';
 import { useRelativeTime } from '../hooks/useRelativeTime';
 import { Avatar } from '@/shared/components/Avatar';
+import { useBlockStore } from '@/store/blockStore';
 import { useDraftStore } from '@/store/draftStore';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 const NO_MESSAGE_PREVIEW = 'Tap to open the conversation';
+const BLOCKED_PREVIEW = 'This user is blocked.';
 
 type ChatListRowProps = {
   id: number;
@@ -33,9 +35,19 @@ export const ChatListRow = memo(
     onPress,
   }: ChatListRowProps) => {
     const styles = useThemedStyles(createChatListRowStyles);
+    const isBlocked = useBlockStore(state => state.blocked[id] === true);
     const draft = useDraftStore(state => state.drafts[id] ?? '');
-    const timestamp = useRelativeTime(lastMessageAt);
-    const hasDraft = draft !== '';
+
+    const hasDraft = !isBlocked && draft !== '';
+    const showTimestamp = !isBlocked && !hasDraft;
+    const timestamp = useRelativeTime(lastMessageAt, showTimestamp);
+
+    let preview = lastMessage ?? NO_MESSAGE_PREVIEW;
+    if (isBlocked) {
+      preview = BLOCKED_PREVIEW;
+    } else if (hasDraft) {
+      preview = draft;
+    }
 
     const handlePress = useCallback(
       () => onPress(id, name, avatarUrl),
@@ -46,8 +58,9 @@ export const ChatListRow = memo(
       ({ pressed }: PressableStateCallbackType) => [
         styles.row,
         pressed && styles.rowPressed,
+        isBlocked && styles.rowBlocked,
       ],
-      [styles],
+      [styles, isBlocked],
     );
 
     return (
@@ -56,7 +69,7 @@ export const ChatListRow = memo(
         onPress={handlePress}
         accessibilityRole="button"
         accessibilityLabel={`Chat with ${name}`}
-        accessibilityHint={hasDraft ? `Draft: ${draft}` : lastMessage}
+        accessibilityHint={hasDraft ? `Draft: ${draft}` : preview}
       >
         <Avatar name={name} uri={avatarUrl} size="md" />
         <View style={styles.content}>
@@ -65,12 +78,15 @@ export const ChatListRow = memo(
           </Text>
           <View style={styles.previewLine}>
             {hasDraft ? <Text style={styles.draftLabel}>Draft: </Text> : null}
-            <Text style={styles.preview} numberOfLines={1}>
-              {hasDraft ? draft : lastMessage ?? NO_MESSAGE_PREVIEW}
+            <Text
+              style={[styles.preview, isBlocked && styles.previewBlocked]}
+              numberOfLines={1}
+            >
+              {preview}
             </Text>
-            {hasDraft ? null : (
+            {showTimestamp ? (
               <Text style={styles.timestamp}>{` · ${timestamp}`}</Text>
-            )}
+            ) : null}
           </View>
         </View>
       </Pressable>

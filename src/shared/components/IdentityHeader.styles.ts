@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import type { Theme } from '@/shared/theme/tokens';
 
-export const createSettingsHeaderStyles = (theme: Theme) =>
+export const createIdentityHeaderStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       alignItems: 'center',
@@ -15,7 +15,7 @@ export const createSettingsHeaderStyles = (theme: Theme) =>
       fontWeight: theme.fontWeight.bold,
       textAlign: 'center',
     },
-    role: {
+    subtitle: {
       marginTop: theme.spacing.xs,
       color: theme.colors.textMuted,
       fontSize: theme.fontSize.body,

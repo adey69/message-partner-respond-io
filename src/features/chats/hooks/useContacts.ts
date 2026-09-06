@@ -1,17 +1,13 @@
-import { useInfiniteQuery, type InfiniteData } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiGet } from '@/data/api/client';
 import { endpoints } from '@/data/api/endpoints';
-import type { ApiListResponse, ApiUser } from '@/data/api/types';
 import { toContact, type Contact } from '@/data/domain/contact';
+import type { ContactsData, ContactsPage } from '@/data/query/contactsCache';
 import { keys } from '@/data/query/keys';
 
 const PAGE_SIZE = 20;
 
-type UsersPage = ApiListResponse<ApiUser>;
-
-export type ContactsData = InfiniteData<UsersPage, number>;
-
-const getNextPageParam = (lastPage: UsersPage, allPages: UsersPage[]) => {
+const getNextPageParam = (lastPage: ContactsPage, allPages: ContactsPage[]) => {
   const loaded = allPages.reduce(
     (count, page) => count + page.results.length,
     0,
@@ -26,7 +22,7 @@ export function useContacts() {
   return useInfiniteQuery({
     queryKey: keys.contacts(),
     queryFn: ({ pageParam, signal }) =>
-      apiGet<UsersPage>(
+      apiGet<ContactsPage>(
         endpoints.users({ limit: PAGE_SIZE, offset: pageParam }),
         signal,
       ),

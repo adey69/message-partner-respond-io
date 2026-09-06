@@ -50,6 +50,8 @@ export function startClock(): () => void {
  * the label rather than the clock reading, so a row re-renders only when its
  * own text changes — one showing a calendar date never does.
  */
-export function useRelativeTime(iso: string): string {
-  return useClockStore(state => formatChatTimestamp(iso, state.now));
+export function useRelativeTime(iso: string, enabled: boolean): string {
+  return useClockStore(state =>
+    enabled ? formatChatTimestamp(iso, state.now) : '',
+  );
 }

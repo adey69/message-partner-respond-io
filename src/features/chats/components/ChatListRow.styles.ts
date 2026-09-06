@@ -3,6 +3,8 @@ import { avatarSize, spacing, type Theme } from '@/shared/theme/tokens';
 
 export const CHAT_ROW_HEIGHT = avatarSize.md + spacing.sm * 2;
 
+const BLOCKED_OPACITY = 0.6;
+
 export const createChatListRowStyles = (theme: Theme) =>
   StyleSheet.create({
     row: {
@@ -14,6 +16,9 @@ export const createChatListRowStyles = (theme: Theme) =>
     },
     rowPressed: {
       backgroundColor: theme.colors.surfaceMuted,
+    },
+    rowBlocked: {
+      opacity: BLOCKED_OPACITY,
     },
     content: {
       flex: 1,
@@ -37,6 +42,9 @@ export const createChatListRowStyles = (theme: Theme) =>
       flexShrink: 1,
       color: theme.colors.textMuted,
       fontSize: theme.fontSize.body,
+    },
+    previewBlocked: {
+      fontStyle: 'italic',
     },
     timestamp: {
       color: theme.colors.textMuted,
