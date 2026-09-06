@@ -5,6 +5,7 @@ import { endpoints } from '@/data/api/endpoints';
 import type { ApiListResponse, ApiPost } from '@/data/api/types';
 import { toMessage, type Message } from '@/data/domain/message';
 import { keys } from '@/data/query/keys';
+import { CACHE_POLICY } from '@/data/query/queryClient';
 
 const PAGE_SIZE = 20;
 
@@ -43,6 +44,9 @@ export function useThread(contactId: number) {
     initialPageParam: 0,
     getNextPageParam,
     select: selectThread,
+    // One of these exists per contact whose thread has been opened, so it is
+    // held for less time than the single list the app keeps alongside it.
+    gcTime: CACHE_POLICY.perContactGcTime,
   });
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = thread;

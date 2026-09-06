@@ -103,6 +103,11 @@ a list scrolled five pages deep, with the list shifting as they land. Offset pag
 cannot safely re-page a list that has changed at its head. One fresh page is what pulling
 down means anyway, and the gesture only fires at the top.
 
+**Nothing refetches when the app returns to the foreground.** `refetchOnWindowFocus` is
+off, and only a 5xx or a transport failure is ever retried. Both defaults would work
+against the point above: a refetch on resume re-requests every page an infinite query has
+loaded, and retrying a 404 or a 429 spends a second request that cannot succeed.
+
 **Client state is persisted; the query cache is not.** The outbox is the only copy of a
 sent message that exists, so losing it on restart is losing user data. The React Query
 cache is re-derivable from the network, and persisting it would put a stale fixture on
@@ -169,21 +174,9 @@ rather than the conventions being retrofitted to whatever was generated.
 
 ## Known limitations
 
-Things deliberately left undone, and why:
-
-- **The block toggle is local and cosmetic.** The API has no concept of blocking, so it
-  hides the composer without affecting what the server returns.
-- **Chat list previews are placeholders.** The users endpoint carries no message history,
-  so a row shows a stand-in preview derived from the contact id until its thread is
-  opened. They are stable per contact rather than random, but they are not real messages.
-- **The outbox is uncapped.** It grows for the lifetime of the install. A production
-  version would need an eviction policy; at fixture scale it does not.
-- **Rate limiting (100 req/min) is not specifically handled.** A 429 surfaces as the same
-  generic error state as any other failure.
-- **No offline detection.** `focusManager` is bridged to `AppState`, but `onlineManager`
-  is not bridged to NetInfo, so there is no automatic recovery on reconnect.
-- **Offset pagination is not stable against a changing dataset.** Safe here because the
-  fixture is static; a real API would want cursors.
-- **Route params are typed but not validated at runtime.** Nothing reaches a screen
-  except through the chats list, which builds its params from mapped contacts, so the
-  types hold today. Adding deep links or notification taps would need a guard.
+Problems I found and consciously did not fix within the deadline are written up in
+[KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md), with what each one would take to address.
+The ones worth knowing before reading the code: blocking is local and cosmetic because the
+API has no concept of it, chat list previews are stand-ins because the users endpoint
+carries no message history, and the outbox is uncapped because it is the only copy of a
+sent message that exists.
