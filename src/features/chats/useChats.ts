@@ -12,6 +12,7 @@ import {
   type PlaceholderMessage,
 } from './utils/placeholderMessage';
 import { useOutboxStore } from '@/store/outboxStore';
+import { notifyFailure } from '@/shared/utils/notify';
 
 export type ChatListItem = Contact & PlaceholderMessage;
 
@@ -67,13 +68,16 @@ export function useChats() {
     [navigation],
   );
 
-  const loadMore = useCallback(() => {
+  const loadMore = useCallback(async () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      const { isError: failed } = await fetchNextPage();
+      if (failed) {
+        notifyFailure('Could not load more chats');
+      }
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const refresh = useCallback(() => {
+  const refresh = useCallback(async () => {
     queryClient.setQueryData<ContactsData>(keys.contacts(), current =>
       current === undefined
         ? current
@@ -82,7 +86,10 @@ export function useChats() {
             pageParams: current.pageParams.slice(0, 1),
           },
     );
-    refetch();
+    const { isError: failed } = await refetch();
+    if (failed) {
+      notifyFailure('Could not refresh chats');
+    }
   }, [queryClient, refetch]);
 
   return {

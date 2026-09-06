@@ -174,9 +174,9 @@ rather than the conventions being retrofitted to whatever was generated.
 
 ## Known limitations
 
-Problems I found and consciously did not fix within the deadline are written up in
-[KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md), with what each one would take to address.
-The ones worth knowing before reading the code: blocking is local and cosmetic because the
-API has no concept of it, chat list previews are stand-ins because the users endpoint
-carries no message history, and the outbox is uncapped because it is the only copy of a
-sent message that exists.
+Blocking is local and cosmetic, because the API has no concept of it. Chat list previews
+are stand-ins, because the users endpoint carries no message history. The outbox is
+uncapped, because it is the only copy of a sent message that exists. Pagination is
+offset-based and so is not stable against a dataset that changes at its head, which is
+safe against a fixed fixture but would want cursors against a real API. Rate limiting is
+surfaced rather than managed: a 4xx is never retried, but `Retry-After` is not read.

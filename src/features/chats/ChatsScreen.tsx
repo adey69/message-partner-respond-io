@@ -20,7 +20,10 @@ const END_REACHED_THRESHOLD = 0.5;
 
 const keyExtractor = (chat: ChatListItem) => String(chat.id);
 
-const getItemLayout = (_: ArrayLike<ChatListItem> | null | undefined, index: number) => ({
+const getItemLayout = (
+  _: ArrayLike<ChatListItem> | null | undefined,
+  index: number,
+) => ({
   length: CHAT_ROW_HEIGHT,
   offset: CHAT_ROW_HEIGHT * index,
   index,
@@ -72,7 +75,7 @@ export function ChatsScreen() {
     );
   }
 
-  if (isError) {
+  if (isError && chats.length === 0) {
     return (
       <View style={styles.list}>
         <StateMessage
@@ -97,7 +100,10 @@ export function ChatsScreen() {
       onEndReachedThreshold={END_REACHED_THRESHOLD}
       ListFooterComponent={renderFooter}
       ListEmptyComponent={
-        <StateMessage title="No chats yet" message="Conversations will appear here." />
+        <StateMessage
+          title="No chats yet"
+          message="Conversations will appear here."
+        />
       }
       refreshControl={
         <RefreshControl
@@ -108,7 +114,9 @@ export function ChatsScreen() {
         />
       }
       style={styles.list}
-      contentContainerStyle={chats.length === 0 ? styles.emptyContent : styles.content}
+      contentContainerStyle={
+        chats.length === 0 ? styles.emptyContent : styles.content
+      }
     />
   );
 }

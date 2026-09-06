@@ -5,6 +5,7 @@ import { endpoints } from '@/data/api/endpoints';
 import type { ApiListResponse, ApiPost } from '@/data/api/types';
 import { toMessage, type Message } from '@/data/domain/message';
 import { keys } from '@/data/query/keys';
+import { notifyFailure } from '@/shared/utils/notify';
 import { CACHE_POLICY } from '@/data/query/queryClient';
 
 const PAGE_SIZE = 20;
@@ -51,9 +52,14 @@ export function useThread(contactId: number) {
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = thread;
 
-  const loadMore = useCallback(() => {
+  // The thread already on screen is worth more than the page that failed, so
+  // the failure is reported beside it rather than replacing it.
+  const loadMore = useCallback(async () => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      const { isError: failed } = await fetchNextPage();
+      if (failed) {
+        notifyFailure('Could not load older messages');
+      }
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 

@@ -82,7 +82,7 @@ export function ChatScreen() {
       return <ThreadSkeleton />;
     }
 
-    if (isError) {
+    if (isError && items.length === 0) {
       return (
         <StateMessage
           title="Could not load messages"
