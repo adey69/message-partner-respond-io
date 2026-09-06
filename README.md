@@ -6,11 +6,11 @@ global block toggle, and a settings screen.
 
 ## Screenshots
 
-<!-- TODO: replace with real captures before submitting -->
-
 | Chats | Thread | Profile | Settings |
-| --- | --- | --- | --- |
-| _screenshot_ | _screenshot_ | _screenshot_ | _screenshot_ |
+| :---: | :---: | :---: | :---: |
+| <img src="docs/screenshots/01-chats.png" width="200" alt="Chats list"> | <img src="docs/screenshots/02-thread.png" width="200" alt="Message thread"> | <img src="docs/screenshots/03-profile.png" width="200" alt="Contact profile"> | <img src="docs/screenshots/04-settings.png" width="200" alt="Settings"> |
+
+Captured on a Pixel 9 Pro XL emulator, Android API 36.
 
 ## Getting started
 
