@@ -8,6 +8,8 @@ import { keys } from '@/data/query/keys';
 
 const PAGE_SIZE = 20;
 
+const NO_MESSAGES: Message[] = [];
+
 type PostsPage = ApiListResponse<ApiPost>;
 
 type ThreadData = InfiniteData<PostsPage, number>;
@@ -52,7 +54,7 @@ export function useThread(contactId: number) {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return {
-    messages: thread.data ?? [],
+    messages: thread.data ?? NO_MESSAGES,
     isPending: thread.isPending,
     isError: thread.isError,
     isLoadingMore: isFetchingNextPage,

@@ -56,7 +56,18 @@ export const createMessageBubbleStyles = (theme: Theme) =>
       fontSize: theme.fontSize.caption,
     },
     failedStatus: {
+      flexDirection: 'row',
+      alignItems: 'center',
       marginTop: theme.spacing.xs,
+      paddingHorizontal: theme.spacing.xs,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: theme.radius.sm,
+    },
+    failedStatusPressed: {
+      backgroundColor: theme.colors.surfaceMuted,
+    },
+    failedLabel: {
+      marginLeft: theme.spacing.xs,
       color: theme.colors.danger,
       fontSize: theme.fontSize.caption,
     },

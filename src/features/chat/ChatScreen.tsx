@@ -40,6 +40,7 @@ export function ChatScreen() {
     loadMore,
     retry,
     sendMessage,
+    retryMessage,
   } = useChat(params.contactId);
 
   const renderItem = useCallback(
@@ -49,6 +50,7 @@ export function ChatScreen() {
           <TimeSeparator label={item.separatorLabel} />
         )}
         <MessageBubble
+          id={item.message.id}
           body={item.message.body}
           direction={item.message.direction}
           status={item.message.status}
@@ -56,10 +58,11 @@ export function ChatScreen() {
           isGroupEnd={item.isGroupEnd}
           contactName={params.contactName}
           contactAvatarUrl={params.contactAvatarUrl}
+          onRetry={retryMessage}
         />
       </View>
     ),
-    [params.contactName, params.contactAvatarUrl],
+    [params.contactName, params.contactAvatarUrl, retryMessage],
   );
 
   const renderMoreIndicator = useCallback(

@@ -6,7 +6,7 @@ import {
   type PressableStateCallbackType,
 } from 'react-native';
 import { createChatListRowStyles } from './ChatListRow.styles';
-import { formatChatTimestamp } from '../utils/formatChatTimestamp';
+import { useRelativeTime } from '../hooks/useRelativeTime';
 import { Avatar } from '@/shared/components/Avatar';
 import { useDraftStore } from '@/store/draftStore';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
@@ -34,6 +34,7 @@ export const ChatListRow = memo(
   }: ChatListRowProps) => {
     const styles = useThemedStyles(createChatListRowStyles);
     const draft = useDraftStore(state => state.drafts[id] ?? '');
+    const timestamp = useRelativeTime(lastMessageAt);
     const hasDraft = draft !== '';
 
     const handlePress = useCallback(
@@ -67,10 +68,8 @@ export const ChatListRow = memo(
             <Text style={styles.preview} numberOfLines={1}>
               {hasDraft ? draft : lastMessage ?? NO_MESSAGE_PREVIEW}
             </Text>
-            {hasDraft || lastMessageAt === undefined ? null : (
-              <Text style={styles.timestamp}>{` · ${formatChatTimestamp(
-                lastMessageAt,
-              )}`}</Text>
+            {hasDraft ? null : (
+              <Text style={styles.timestamp}>{` · ${timestamp}`}</Text>
             )}
           </View>
         </View>

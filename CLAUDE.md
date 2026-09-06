@@ -68,7 +68,10 @@ Base URL `https://responserift.dev`. Endpoints: `users`, `posts`, `comments`, `t
 
 - List responses are `{ total, limit, offset, results }`.
 - Pagination is `limit`/`offset` only. A `page` param is accepted and ignored.
-- `POST /api/posts` returns 201 with a fabricated id and does not persist.
+- `POST /api/posts` returns 201 echoing the post back, and does not persist. The id is
+  always `101`, so it identifies nothing and cannot be adopted. It rejects a body without
+  a `title`, which a chat message has no use for.
+- Requests are rate limited to 100 per minute.
 - A thread is a contact's `posts` (0–4 per contact, 9 contacts have none) sorted by
   `createdAt`, which for posts is also id order. Everything fetched is inbound; outbound
   comes from the outbox.

@@ -30,3 +30,10 @@ export type ApiPost = {
   category: string;
   createdAt: string;
 };
+
+/** The API rejects a post without a title, which a chat message does not have. */
+export type ApiNewPost = {
+  userId: number;
+  title: string;
+  body: string;
+};

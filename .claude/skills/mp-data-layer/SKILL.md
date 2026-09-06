@@ -11,7 +11,7 @@ React Query owns server state. Zustand owns client state. Before adding state, a
 one it is; if the answer is "both", it is server state with a client-side overlay, not a
 reason to blur the line.
 
-Currently in Zustand: message drafts. Nothing else.
+Currently in Zustand: message drafts and the outbox. Nothing else.
 
 ## Query keys
 
@@ -109,25 +109,30 @@ contains.
 
 ## Mutations
 
-Sending a message runs both layers, and both are load-bearing:
+Sending is a `useMutation` whose optimistic write goes to the outbox, not to the query
+cache. `onMutate` enqueues the message as `pending` so it is on screen before the request
+leaves; `onSuccess` marks it `sent`; `onError` marks it `failed`. Threads merge the outbox
+in at render.
 
-1. **Optimistic cache update.** `onMutate` cancels in-flight queries for the thread key,
-   snapshots the previous value, writes the pending message, and returns the snapshot.
-   `onError` restores it.
-2. **Outbox persistence.** The same message is written to `src/store/outboxStore.ts`,
-   keyed by contact id, and merged into the thread at render.
-
-The second layer exists because the API discards writes, so a refetch or cache eviction
-would otherwise delete the user's sent messages. Do not "simplify" it away, and do not
-invalidate the thread query after a successful send.
+The cache is the wrong home for a sent message. The thread query holds raw API pages, so
+an optimistic entry there means fabricating a post — and because the API discards writes,
+the next refetch replaces that page and the message blinks out. Rolling back on error
+would be the same problem in reverse: there is nothing to roll back to that the server
+would ever agree with. So there is no `setQueryData` on the thread, and no invalidation
+after a successful send. Do not add either.
 
 Message status (`pending` / `sent` / `failed`) lives on the outbox entry and drives the
-bubble's UI. Failed sends stay visible and retryable rather than disappearing.
+bubble's UI. A failed send stays visible and offers a retry, which re-runs the mutation
+with the same outbox entry so it keeps its id and its place in the thread.
+
+The created post in the response is discarded. Every call answers with the same
+fabricated id, so adopting it would give every sent message the same key.
 
 ## Domain mapping
 
 Components never see an API shape. `src/data/domain/` converts `ApiUser` to `Contact` and
-`ApiPost` to `Message`, and it is the only place that knows a message was ever a post. Adding a second source means a mapper and the thread hook, and touches no UI.
+`ApiPost` to `Message`, and it is the only place that knows a message was ever a post.
+Adding a second source means a mapper and the thread hook, and touches no UI.
 
 Mappers are pure and synchronous — no fetching, no store access.
 
