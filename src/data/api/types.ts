@@ -20,3 +20,13 @@ export type ApiUser = {
     zipcode: string;
   };
 };
+
+export type ApiPost = {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+  tags: string[];
+  category: string;
+  createdAt: string;
+};

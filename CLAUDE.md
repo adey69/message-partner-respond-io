@@ -69,6 +69,6 @@ Base URL `https://responserift.dev`. Endpoints: `users`, `posts`, `comments`, `t
 - List responses are `{ total, limit, offset, results }`.
 - Pagination is `limit`/`offset` only. A `page` param is accepted and ignored.
 - `POST /api/posts` returns 201 with a fabricated id and does not persist.
-- A thread merges a contact's `posts` and `comments` (0–9 items per contact, 9 contacts
-  have none) sorted by `createdAt`. Everything fetched is inbound; outbound comes from the
-  outbox.
+- A thread is a contact's `posts` (0–4 per contact, 9 contacts have none) sorted by
+  `createdAt`, which for posts is also id order. Everything fetched is inbound; outbound
+  comes from the outbox.

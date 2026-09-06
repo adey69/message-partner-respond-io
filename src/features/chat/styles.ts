@@ -13,6 +13,9 @@ export const createStyles = (theme: Theme) =>
     threadContent: {
       paddingVertical: theme.spacing.sm,
     },
+    moreIndicator: {
+      paddingVertical: theme.spacing.lg,
+    },
     composerArea: {
       backgroundColor: theme.colors.background,
     },

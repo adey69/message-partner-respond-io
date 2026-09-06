@@ -1,18 +1,21 @@
 import { useCallback, useMemo, useState } from 'react';
-import { mockThread } from './mockThread';
+import { useThread } from './hooks/useThread';
 import { buildThreadItems } from './utils/buildThreadItems';
 import type { Message } from '@/data/domain/message';
 
 /**
- * The thread for one contact. Sent messages are held locally because the API
- * discards writes, so nothing sent here is ever echoed back by the server.
+ * The thread for one contact. Sent messages are held alongside the fetched
+ * ones because the API discards writes, so nothing sent here is ever echoed
+ * back by the server.
  */
 export function useChat(contactId: number) {
   const [sent, setSent] = useState<Message[]>([]);
+  const { messages, isPending, isError, isLoadingMore, loadMore, retry } =
+    useThread(contactId);
 
   const items = useMemo(
-    () => buildThreadItems([...mockThread(contactId), ...sent]),
-    [contactId, sent],
+    () => buildThreadItems([...messages, ...sent]),
+    [messages, sent],
   );
 
   const sendMessage = useCallback((body: string) => {
@@ -28,5 +31,13 @@ export function useChat(contactId: number) {
     ]);
   }, []);
 
-  return { items, sendMessage };
+  return {
+    items,
+    isPending,
+    isError,
+    isLoadingMore,
+    loadMore,
+    retry,
+    sendMessage,
+  };
 }

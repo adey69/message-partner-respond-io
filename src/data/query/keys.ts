@@ -5,4 +5,5 @@
 export const keys = {
   contacts: () => ['contacts'] as const,
   contact: (id: number) => ['contacts', id] as const,
+  thread: (contactId: number) => ['thread', contactId] as const,
 };

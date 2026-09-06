@@ -11,7 +11,7 @@ React Query owns server state. Zustand owns client state. Before adding state, a
 one it is; if the answer is "both", it is server state with a client-side overlay, not a
 reason to blur the line.
 
-Currently in Zustand: blocked contact ids, and the outbox. Nothing else.
+Currently in Zustand: message drafts. Nothing else.
 
 ## Query keys
 
@@ -97,6 +97,16 @@ getNextPageParam: (lastPage, allPages) => {
 Returning `undefined` is what ends the scroll. A `page`-based implementation silently
 loops the first page forever and looks like it works.
 
+A thread uses the same recipe with a larger page size. A contact has at most a handful of
+posts, so one request covers a whole thread and `getNextPageParam` returns `undefined`
+straight away. The page size describes what a thread is worth fetching, not what this
+fixture happens to hold — shrinking it until paging fires would be tuning the code to the
+fixture.
+
+A thread also has one source, because two endpoints merged into a single sorted stream
+cannot be offset-paged: you would have to read both in full to know what the next page
+contains.
+
 ## Mutations
 
 Sending a message runs both layers, and both are load-bearing:
@@ -117,9 +127,7 @@ bubble's UI. Failed sends stay visible and retryable rather than disappearing.
 ## Domain mapping
 
 Components never see an API shape. `src/data/domain/` converts `ApiUser` to `Contact` and
-`ApiPost | ApiComment` to `Message`, and it is the only place that knows a message was
-ever a post or a comment. Changing or extending the thread's sources is a one-file edit
-that touches no UI.
+`ApiPost` to `Message`, and it is the only place that knows a message was ever a post. Adding a second source means a mapper and the thread hook, and touches no UI.
 
 Mappers are pure and synchronous — no fetching, no store access.
 
