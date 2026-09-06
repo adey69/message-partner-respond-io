@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
+import BootSplash from 'react-native-bootsplash';
 import { ChatScreen } from '@/features/chat/ChatScreen';
 import { ChatHeaderTitle } from '@/features/chat/components/ChatHeaderTitle';
 import { ProfileScreen } from '@/features/profile/ProfileScreen';
@@ -39,12 +40,30 @@ export function RootNavigator() {
   const navigationTheme = useMemo(() => toNavigationTheme(theme), [theme]);
   const screenOptions = useMemo(() => toStackScreenOptions(theme), [theme]);
 
+  // The splash covers the whole JavaScript start-up, so it lifts once the
+  // navigator has a screen to show rather than after a guessed delay.
+  const hideSplash = useCallback(() => {
+    BootSplash.hide({ fade: true });
+  }, []);
+
   return (
-    <NavigationContainer theme={navigationTheme}>
+    <NavigationContainer theme={navigationTheme} onReady={hideSplash}>
       <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen name="Tabs" component={TabNavigator} options={tabsOptions} />
-        <Stack.Screen name="Chat" component={ChatScreen} options={chatOptions} />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+        <Stack.Screen
+          name="Tabs"
+          component={TabNavigator}
+          options={tabsOptions}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={chatOptions}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ title: 'Profile' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

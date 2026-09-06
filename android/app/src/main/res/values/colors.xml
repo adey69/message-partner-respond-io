@@ -1,4 +1,4 @@
 <resources>
-    <!-- The plate behind the adaptive launcher icon; the app's accent blue. -->
     <color name="ic_launcher_background">#0084FF</color>
+    <color name="bootsplash_background">#0084ff</color>
 </resources>

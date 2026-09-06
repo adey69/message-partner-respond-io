@@ -8,6 +8,15 @@ jest.mock(
   () => require('react-native-safe-area-context/jest/mock').default,
 );
 
+// A native module, so there is nothing behind it in a test process.
+jest.mock('react-native-bootsplash', () => ({
+  __esModule: true,
+  default: {
+    hide: jest.fn().mockResolvedValue(undefined),
+    isVisible: jest.fn().mockResolvedValue(false),
+  },
+}));
+
 globalThis.fetch = jest.fn();
 
 // Nothing reaches the network in a test. The default is an empty page so a
