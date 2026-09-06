@@ -1,23 +1,37 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type BlockState = {
   blocked: Record<number, true>;
   toggleBlock: (contactId: number) => void;
 };
 
-export const useBlockStore = create<BlockState>(set => ({
-  blocked: {},
+type Persisted = Pick<BlockState, 'blocked'>;
 
-  toggleBlock: contactId =>
-    set(state => {
-      const blocked = { ...state.blocked };
+export const useBlockStore = create<BlockState>()(
+  persist(
+    set => ({
+      blocked: {},
 
-      if (blocked[contactId] === true) {
-        delete blocked[contactId];
-      } else {
-        blocked[contactId] = true;
-      }
+      toggleBlock: contactId =>
+        set(state => {
+          const blocked = { ...state.blocked };
 
-      return { blocked };
+          if (blocked[contactId] === true) {
+            delete blocked[contactId];
+          } else {
+            blocked[contactId] = true;
+          }
+
+          return { blocked };
+        }),
     }),
-}));
+    {
+      name: 'messagepartner.blocked',
+      version: 1,
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state): Persisted => ({ blocked: state.blocked }),
+    },
+  ),
+);

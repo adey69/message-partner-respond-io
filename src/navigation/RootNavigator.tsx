@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -13,6 +13,7 @@ import { TabNavigator } from './TabNavigator';
 import { toNavigationTheme, toStackScreenOptions } from './navigationTheme';
 import type { RootStackParamList } from './types';
 import { useTheme } from '@/shared/theme/useTheme';
+import { useStoresHydrated } from '@/store/hydration';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -40,14 +41,23 @@ export function RootNavigator() {
   const navigationTheme = useMemo(() => toNavigationTheme(theme), [theme]);
   const screenOptions = useMemo(() => toStackScreenOptions(theme), [theme]);
 
-  // The splash covers the whole JavaScript start-up, so it lifts once the
-  // navigator has a screen to show rather than after a guessed delay.
-  const hideSplash = useCallback(() => {
-    BootSplash.hide({ fade: true });
-  }, []);
+  const [isNavigationReady, setNavigationReady] = useState(false);
+  const isHydrated = useStoresHydrated();
+
+  const handleReady = useCallback(() => setNavigationReady(true), []);
+
+  // The splash covers the whole JavaScript start-up, so it lifts once there is
+  // a finished screen behind it rather than after a guessed delay. That means
+  // both halves: a navigator with a screen to show, and client state back from
+  // disk, so drafts and blocks are already in place on the first frame.
+  useEffect(() => {
+    if (isNavigationReady && isHydrated) {
+      BootSplash.hide({ fade: true });
+    }
+  }, [isNavigationReady, isHydrated]);
 
   return (
-    <NavigationContainer theme={navigationTheme} onReady={hideSplash}>
+    <NavigationContainer theme={navigationTheme} onReady={handleReady}>
       <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen
           name="Tabs"

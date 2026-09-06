@@ -1,3 +1,4 @@
+import { clearAllMockStorages } from '@react-native-async-storage/async-storage/jest';
 import { EMPTY_PAGE, fetchMock } from './apiMock';
 import { clearTestQueryClients } from './queryClient';
 import { queryClient } from '@/data/query/queryClient';
@@ -6,6 +7,11 @@ import { queryClient } from '@/data/query/queryClient';
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default,
+);
+
+// The library ships an in-memory implementation for exactly this.
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest'),
 );
 
 // A native module, so there is nothing behind it in a test process.
@@ -38,4 +44,5 @@ beforeEach(() => {
 afterEach(() => {
   clearTestQueryClients();
   queryClient.clear();
+  clearAllMockStorages();
 });
