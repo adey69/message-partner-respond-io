@@ -1,4 +1,4 @@
-const BASE_URL = 'https://responserift.dev/api';
+export const BASE_URL = 'https://responserift.dev/api';
 
 export class ApiError extends Error {
   readonly status: number;

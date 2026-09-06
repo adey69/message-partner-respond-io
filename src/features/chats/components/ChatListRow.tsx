@@ -5,9 +5,9 @@ import {
   View,
   type PressableStateCallbackType,
 } from 'react-native';
-import { Avatar } from './Avatar';
 import { createChatListRowStyles } from './ChatListRow.styles';
 import { formatChatTimestamp } from '../utils/formatChatTimestamp';
+import { Avatar } from '@/shared/components/Avatar';
 import { useThemedStyles } from '@/shared/theme/useThemedStyles';
 
 const NO_MESSAGE_PREVIEW = 'Tap to open the conversation';
